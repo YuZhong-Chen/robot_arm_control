@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+
+<!-- roslaunch urdf_tutorial display.launch model:='$(find robot_arm_control)/urdf/Robot_Arm.urdf' -->
+
+<robot name="Robot_Arm">
+    <link name="world"/>
+
+    <link name="arm_link_1">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 1.57" /> <!-- rpy means roll pitch yaw -->
+            <geometry>
+                <mesh filename="package://robot_arm_control/meshes/arm_link_1.stl" />
+            </geometry>
+            <material name="">
+                <color rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+        </visual>
+    </link>
+
+    <link name="arm_link_2">
+        <visual>
+            <origin xyz="0.0 0.05 0.27" rpy="3.14 1.5708 3.14" />
+            <geometry>
+                <mesh filename="package://robot_arm_control/meshes/arm_link_2.stl" />
+            </geometry>
+            <material name="">
+                <color rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+        </visual>
+    </link>
+
+    <link name="arm_link_3">
+        <visual>
+            <origin xyz="-0.002 0.0 0.13" rpy="0 3.14 1.57" />
+            <geometry>
+                <mesh filename="package://robot_arm_control/meshes/arm_link_3.stl" />
+            </geometry>
+            <material name="">
+                <color rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+        </visual>
+    </link>
+
+    <link name="end_effector"/>
+
+    <!--######################################################################-->
+
+    <joint name="arm_joint_1" type="continuous">
+        <axis xyz="0 0 1"/>
+        <parent link="world"/>
+        <child link="arm_link_1"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.1"/>
+    </joint>
+
+    <joint name="arm_joint_2" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="arm_link_1"/>
+        <child link="arm_link_2"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.20271"/>
+    </joint>
+
+    <joint name="arm_joint_3" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="arm_link_2"/>
+        <child link="arm_link_3"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.269"/>
+    </joint>
+
+    <joint name="arm_end_effector" type="fixed">
+        <parent link="arm_link_3"/>
+        <child link="end_effector"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.13"/>
+    </joint>
+
+    <!--######################################################################-->
+
+    <transmission name="arm_joint_trans_1" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="arm_joint_motor_1">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="arm_joint_1">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+    <transmission name="arm_joint_trans_2" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="arm_joint_motor_2">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="arm_joint_2">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+    <transmission name="arm_joint_trans_3" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="arm_joint_motor_3">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="arm_joint_3">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+</robot>
