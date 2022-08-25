@@ -37,7 +37,7 @@ double RobotArm_INFO::GetJointVelocity(int num) {
     return 0.01;
 }
 
-bool RobotArm_INFO::SetJointAngle(int num, int NewValue) {
+bool RobotArm_INFO::SetJointAngle(int num, double NewValue) {
     if (num >= 0 && num <= 2) {
         this->jointAngle[num] = NewValue;
         return true;

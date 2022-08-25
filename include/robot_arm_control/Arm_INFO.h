@@ -11,12 +11,12 @@ class RobotArm_INFO {
     double GetJointAngle(int num);
     double GetJointVelocity(int num);
 
-    bool SetJointAngle(int num, int NewValue);
+    bool SetJointAngle(int num, double NewValue);
     bool SetJointVelocity(int num, double NewValue);
 
    private:
     std::string jointName[3];
-    int jointAngle[3];
+    double jointAngle[3];
     double jointVelocity[3];
 };
 

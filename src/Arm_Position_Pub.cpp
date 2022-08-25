@@ -12,9 +12,12 @@ int main(int argc, char **argv) {
 
     std::string command;
     int num;
-    double input;
+    double input[2];
 
     RobotArm_INFO RobotArm_info;
+    RobotArm_info.SetJointAngle(0, 90);
+    RobotArm_info.SetJointAngle(1, 180);
+    RobotArm_info.SetJointAngle(2, 180);
 
     while (std::cin >> command) {
         if (command == "quit" || command == "q") {
@@ -30,22 +33,22 @@ int main(int argc, char **argv) {
             }
 
         } else if (command == "write" || command == "w") {
-            std::cin >> command >> num >> input;
-            if (command == "pos") {
-                if (!RobotArm_info.SetJointAngle(num, (int)input)) {
-                    std::cout << "Error !!!\n";
+            std::cin >> command >> num >> input[0];
+            if (command == "pos" || command == "p") {
+                if (!RobotArm_info.SetJointAngle(num, input[0])) {
+                    std::cout << "Error in setting Angle!!!\n";
                 }
-            } else if (command == "vel") {
-                if (!RobotArm_info.SetJointVelocity(num, input)) {
-                    std::cout << "Error !!!\n";
+            } else if (command == "vel" || command == "v") {
+                if (!RobotArm_info.SetJointVelocity(num, input[0])) {
+                    std::cout << "Error in setting Velocity !!!\n";
                 }
-            } else if (command == "both") {
-                if (!RobotArm_info.SetJointAngle(num, (int)input)) {
-                    std::cout << "Error !!!\n";
+            } else if (command == "both" || command == "b") {
+                std::cin >> input[1];
+                if (!RobotArm_info.SetJointAngle(num, input[0])) {
+                    std::cout << "Error in setting Angle!!!\n";
                 }
-                std::cin >> input;
-                if (!RobotArm_info.SetJointVelocity(num, input)) {
-                    std::cout << "Error !!!\n";
+                if (!RobotArm_info.SetJointVelocity(num, input[1])) {
+                    std::cout << "Error in setting Velocity !!!\n";
                 }
             }
         } else if (command == "pub" || command == "p") {
