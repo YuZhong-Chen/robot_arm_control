@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include <string>
 
 #include "ros/ros.h"
@@ -8,7 +7,7 @@
 #define PI 3.14159
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "Arm_Position_Pub");
+    ros::init(argc, argv, "Rviz_Arm_Position_Pub");
     ros::NodeHandle nh;
     ros::Publisher jointState_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1000);
     ros::Rate loop_rate(10);  // Unit : Hz
@@ -25,6 +24,7 @@ int main(int argc, char **argv) {
             msg.name.push_back(jointName[i]);
             msg.position.push_back(jointAngle[i]);
         }
+
         jointState_pub.publish(msg);
 
         jointAngle[0] += 0.01;
