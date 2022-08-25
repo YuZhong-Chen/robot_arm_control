@@ -1,13 +1,13 @@
 <launch>
 
     <arg name="model" default="$(find robot_arm_control)/urdf/Robot_Arm.urdf"/>
-    <arg name="gui" default="false"/>
+    <arg name="gui" default="false"/> <!-- Use toolBar to set each joint angle. -->
     <arg name="rvizconfig" default="$(find robot_arm_control)/rviz/urdf.rviz" />
 
     <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
 
     <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
-    <node unless="$(arg gui)" name="Rviz_Arm_Position_node" pkg="robot_arm_control" type="Rviz_Arm_Position_node" />
+    <node unless="$(arg gui)" name="Rviz_Arm_Position_node" pkg="robot_arm_control" type="Rviz_Arm_Position_node" output="screen"/>
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
