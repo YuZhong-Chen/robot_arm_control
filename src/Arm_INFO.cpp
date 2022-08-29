@@ -11,9 +11,9 @@ RobotArm_INFO::RobotArm_INFO() {
     jointAngle[1] = 0;
     jointAngle[2] = 0;
 
-    jointVelocity[0] = 0.01;
-    jointVelocity[1] = 0.01;
-    jointVelocity[2] = 0.01;
+    jointVelocity[0] = 10;
+    jointVelocity[1] = 10;
+    jointVelocity[2] = 10;
 }
 
 std::string RobotArm_INFO::GetJointName(int num) {
