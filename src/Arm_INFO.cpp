@@ -10,18 +10,24 @@ RobotArm_INFO::RobotArm_INFO() {
     JointName[0] = "arm_joint_1";
     JointName[1] = "arm_joint_2";
     JointName[2] = "arm_joint_3";
+    JointName[3] = "Gripper_left";
+    JointName[4] = "Gripper_right";
 
     JointAngle[0] = 0;
     JointAngle[1] = 0;
     JointAngle[2] = 0;
+    JointAngle[3] = 0;
+    JointAngle[4] = 0;
 
     JointVelocity[0] = 20;
     JointVelocity[1] = 10;
     JointVelocity[2] = 10;
+    JointVelocity[3] = 10;
+    JointVelocity[4] = 10;
 
-    ArmLinkLength[0] = 30.271;
-    ArmLinkLength[1] = 26.9;
-    ArmLinkLength[2] = 13.0;
+    ArmLinkLength[0] = 21.0;
+    ArmLinkLength[1] = 17.0;
+    ArmLinkLength[2] = 12.3;
 
     JointAngleLimit[0].first = -30.0;
     JointAngleLimit[0].second = 210.0;
@@ -29,24 +35,28 @@ RobotArm_INFO::RobotArm_INFO() {
     JointAngleLimit[1].second = 330.0;
     JointAngleLimit[2].first = 10.0;
     JointAngleLimit[2].second = 330.0;
+    JointAngleLimit[3].first = -30.0;
+    JointAngleLimit[3].second = 180.0;
+    JointAngleLimit[4].first = -30.0;
+    JointAngleLimit[4].second = 180.0;
 }
 
 std::string RobotArm_INFO::GetJointName(int num) {
-    if (num >= 0 && num <= 2) {
+    if (num >= 0 && num <= 4) {
         return this->JointName[num];
     }
     return "";
 }
 
 double RobotArm_INFO::GetJointAngle(int num) {
-    if (num >= 0 && num <= 2) {
+    if (num >= 0 && num <= 4) {
         return this->JointAngle[num];
     }
     return 0;
 }
 
 double RobotArm_INFO::GetJointVelocity(int num) {
-    if (num >= 0 && num <= 2) {
+    if (num >= 0 && num <= 4) {
         return this->JointVelocity[num];
     }
     return 0.01;

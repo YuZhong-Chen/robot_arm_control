@@ -38,12 +38,14 @@ int main(int argc, char **argv) {
         sensor_msgs::JointState msg;
         msg.header.seq = ++frame_seq;
         msg.header.stamp = ros::Time::now();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             msg.name.push_back(Cur_RobotArm_info.GetJointName(i));
         }
         msg.position.push_back((Cur_RobotArm_info.GetJointAngle(0)) * PI / 180.0);
         msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(1)) * PI / 180.0);
         msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(2)) * PI / 180.0);
+        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(3)) * PI / 180.0);
+        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(4)) * PI / 180.0);
         jointState_pub.publish(msg);
 
         ros::spinOnce();

@@ -28,13 +28,13 @@ class RobotArm_INFO {
     } POINT;
 
    private:
-    std::string JointName[3];
+    std::string JointName[5];
 
     // Unit : Degree
-    double JointAngle[3];
+    double JointAngle[5];
 
     // Unit : Degree / s
-    double JointVelocity[3];
+    double JointVelocity[5];
 
     // Unit : cm
     double ArmLinkLength[3];
@@ -44,7 +44,7 @@ class RobotArm_INFO {
     POINT EndEffectorPosition;
 
     // The Joint Min(first) and Max(second) Angle.
-    std::pair<double, double> JointAngleLimit[3];
+    std::pair<double, double> JointAngleLimit[5];
 
     bool isJointAngleLegal(double *angle);
 };
