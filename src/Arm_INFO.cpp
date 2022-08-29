@@ -23,12 +23,12 @@ RobotArm_INFO::RobotArm_INFO() {
     ArmLinkLength[1] = 26.9;
     ArmLinkLength[2] = 13.0;
 
-    JointAngleLimit[0].first = -90.0;
-    JointAngleLimit[0].second = 360.0;
-    JointAngleLimit[1].first = 45.0;
-    JointAngleLimit[1].second = 315.0;
-    JointAngleLimit[2].first = 30.0;
-    JointAngleLimit[2].second = 315.0;
+    JointAngleLimit[0].first = -30.0;
+    JointAngleLimit[0].second = 210.0;
+    JointAngleLimit[1].first = 10.0;
+    JointAngleLimit[1].second = 330.0;
+    JointAngleLimit[2].first = 10.0;
+    JointAngleLimit[2].second = 330.0;
 }
 
 std::string RobotArm_INFO::GetJointName(int num) {
@@ -109,12 +109,26 @@ bool RobotArm_INFO::SetEndEffectorPosition(double x, double y, double z) {
 
     // out of range ( Error )
     if (!isJointAngleLegal(answer)) {
-        return false;
+        if (!isnan(answer[1]) && !isnan(answer[2]) && answer[1] < 360.0 && answer[2] < 360.0) {
+            if (answer[0] < JointAngleLimit[0].first) {
+                answer[0] = 180 + answer[0];
+            } else if (answer[0] > JointAngleLimit[0].second) {
+                answer[0] = answer[0] - 180;
+            }
+            answer[1] = 360 - answer[1];
+            answer[2] = 360 - answer[2];
+            if (!isJointAngleLegal(answer)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     EndEffectorPosition.x = x;
     EndEffectorPosition.y = y;
     EndEffectorPosition.z = z;
+
     for (int i = 0; i < 3; i++) {
         JointAngle[i] = answer[i];
     }
@@ -124,10 +138,10 @@ bool RobotArm_INFO::SetEndEffectorPosition(double x, double y, double z) {
 bool RobotArm_INFO::isJointAngleLegal(double *angle) {
     for (int i = 0; i < 3; i++) {
         if (angle[i] < JointAngleLimit[i].first || angle[i] > JointAngleLimit[i].second || isnan(angle[i])) {
-            for (int j = 0; j < 3; j++) {
-                std::cout << angle[j] << " ";
-            }
-            std::cout << '\n';
+            // for (int j = 0; j < 3; j++) {
+            //     std::cout << angle[j] << " ";
+            // }
+            // std::cout << '\n';
             return false;
         }
     }

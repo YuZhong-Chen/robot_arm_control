@@ -41,9 +41,9 @@ int main(int argc, char **argv) {
         for (int i = 0; i < 3; i++) {
             msg.name.push_back(Cur_RobotArm_info.GetJointName(i));
         }
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(0) - 90) * PI / 180.0);
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(1) - 180) * PI / 180.0);
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(2) - 180) * PI / 180.0);
+        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(0)) * PI / 180.0);
+        msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(1)) * PI / 180.0);
+        msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(2)) * PI / 180.0);
         jointState_pub.publish(msg);
 
         ros::spinOnce();
