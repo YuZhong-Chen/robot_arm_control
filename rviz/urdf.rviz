@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/end_effector1
+        - /TF1/Frames1/end_effector1/Position1
       Splitter Ratio: 0.5
     Tree Height: 560
   - Class: rviz/Selection
@@ -164,9 +166,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.40039724111557007
+      Pitch: 0.19039735198020935
       Target Frame: <world>
-      Yaw: 0.7585818767547607
+      Yaw: 0.31358203291893005
     Saved: ~
 Window Geometry:
   Displays:
