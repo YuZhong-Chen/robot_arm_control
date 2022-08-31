@@ -10,20 +10,17 @@ RobotArm_INFO::RobotArm_INFO() {
     JointName[0] = "arm_joint_1";
     JointName[1] = "arm_joint_2";
     JointName[2] = "arm_joint_3";
-    JointName[3] = "Gripper_left";
-    JointName[4] = "Gripper_right";
+    JointName[3] = "Gripper";
 
-    JointAngle[0] = 0;
-    JointAngle[1] = 0;
-    JointAngle[2] = 0;
-    JointAngle[3] = 0;
-    JointAngle[4] = 0;
+    CurrentJointAngle[0] = 0;
+    CurrentJointAngle[1] = 0;
+    CurrentJointAngle[2] = 0;
+    CurrentJointAngle[3] = 0;
 
     JointVelocity[0] = 20;
     JointVelocity[1] = 10;
     JointVelocity[2] = 10;
     JointVelocity[3] = 10;
-    JointVelocity[4] = 10;
 
     ArmLinkLength[0] = 21.0;
     ArmLinkLength[1] = 17.0;
@@ -37,51 +34,58 @@ RobotArm_INFO::RobotArm_INFO() {
     JointAngleLimit[2].second = 330.0;
     JointAngleLimit[3].first = -30.0;
     JointAngleLimit[3].second = 180.0;
-    JointAngleLimit[4].first = -30.0;
-    JointAngleLimit[4].second = 180.0;
 }
 
 std::string RobotArm_INFO::GetJointName(int num) {
-    if (num >= 0 && num <= 4) {
-        return this->JointName[num];
-    }
-    return "";
+    return this->JointName[num];
 }
 
-double RobotArm_INFO::GetJointAngle(int num) {
-    if (num >= 0 && num <= 4) {
-        return this->JointAngle[num];
-    }
-    return 0;
+double RobotArm_INFO::GetGoalJointAngle(int num) {
+    return this->GoalJointAngle[num];
+}
+
+double RobotArm_INFO::GetCurrentJointAngle(int num) {
+    return this->CurrentJointAngle[num];
 }
 
 double RobotArm_INFO::GetJointVelocity(int num) {
-    if (num >= 0 && num <= 4) {
-        return this->JointVelocity[num];
-    }
-    return 0.01;
+    return this->JointVelocity[num];
 }
 
-double RobotArm_INFO::GetEndEffectorPosition(int num) {
+double RobotArm_INFO::GetGoalEndEffectorPosition(int num) {
     switch (num) {
         case 0:
-            return EndEffectorPosition.x;
+            return GoalEndEffectorPosition.x;
         case 1:
-            return EndEffectorPosition.y;
+            return GoalEndEffectorPosition.y;
         case 2:
-            return EndEffectorPosition.z;
+            return GoalEndEffectorPosition.z;
         default:
             break;
     }
     return -1;
 }
 
-bool RobotArm_INFO::SetJointAngle(int num, double NewValue) {
-    if (num >= 0 && num <= 2) {
-        this->JointAngle[num] = NewValue;
-        return true;
+double RobotArm_INFO::GetCurrentEndEffectorPosition(int num) {
+    switch (num) {
+        case 0:
+            return CurrentEndEffectorPosition.x;
+        case 1:
+            return CurrentEndEffectorPosition.y;
+        case 2:
+            return CurrentEndEffectorPosition.z;
+        default:
+            break;
     }
-    return false;
+    return -1;
+}
+
+void RobotArm_INFO::SetGoalJointAngle(int num, double NewValue) {
+    this->GoalJointAngle[num] = NewValue;
+}
+
+void RobotArm_INFO::SetCurrentJointAngle(int num, double NewValue) {
+    this->CurrentJointAngle[num] = NewValue;
 }
 
 bool RobotArm_INFO::SetJointVelocity(int num, double NewValue) {
@@ -92,7 +96,7 @@ bool RobotArm_INFO::SetJointVelocity(int num, double NewValue) {
     return false;
 }
 
-bool RobotArm_INFO::SetEndEffectorPosition(double x, double y, double z) {
+bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
     double answer[3];
 
     if (z < 0.0) {
@@ -117,45 +121,40 @@ bool RobotArm_INFO::SetEndEffectorPosition(double x, double y, double z) {
 
     answer[2] = LawOfCosine(ArmLinkLength[1], ArmLinkLength[2], b) * 57.29577;
 
+    if (!isJointAngleLegal(1, answer[1]) || !isJointAngleLegal(2, answer[2])) {
+        return false;
+    }
+
     // out of range ( Error )
-    if (!isJointAngleLegal(answer)) {
-        if (!isnan(answer[1]) && !isnan(answer[2]) && answer[1] < 360.0 && answer[2] < 360.0) {
-            if (answer[0] < JointAngleLimit[0].first) {
-                answer[0] = 180 + answer[0];
-            } else if (answer[0] > JointAngleLimit[0].second) {
-                answer[0] = answer[0] - 180;
-            }
-            answer[1] = 360 - answer[1];
-            answer[2] = 360 - answer[2];
-            if (!isJointAngleLegal(answer)) {
-                return false;
-            }
-        } else {
+    if (!isJointAngleLegal(0, answer[0])) {
+        if (answer[0] < JointAngleLimit[0].first) {
+            answer[0] = 180 + answer[0];
+        } else if (answer[0] > JointAngleLimit[0].second) {
+            answer[0] = answer[0] - 180;
+        }
+        answer[1] = 360 - answer[1];
+        answer[2] = 360 - answer[2];
+        if (!isJointAngleLegal(0, answer[0]) || !isJointAngleLegal(1, answer[1]) || !isJointAngleLegal(2, answer[2])) {
             return false;
         }
     }
 
-    EndEffectorPosition.x = x;
-    EndEffectorPosition.y = y;
-    EndEffectorPosition.z = z;
+    GoalEndEffectorPosition.x = x;
+    GoalEndEffectorPosition.y = y;
+    GoalEndEffectorPosition.z = z;
 
     for (int i = 0; i < 3; i++) {
-        JointAngle[i] = answer[i];
+        GoalJointAngle[i] = answer[i];
     }
     return true;
 }
 
-bool RobotArm_INFO::isJointAngleLegal(double *angle) {
-    for (int i = 0; i < 3; i++) {
-        if (angle[i] < JointAngleLimit[i].first || angle[i] > JointAngleLimit[i].second || isnan(angle[i])) {
-            // for (int j = 0; j < 3; j++) {
-            //     std::cout << angle[j] << " ";
-            // }
-            // std::cout << '\n';
-            return false;
-        }
+bool RobotArm_INFO::isJointAngleLegal(int num, double angle) {
+    if (isnan(angle) || angle < JointAngleLimit[num].first || angle > JointAngleLimit[num].second) {
+        return false;
+    } else {
+        return true;
     }
-    return true;
 }
 
 double LawOfCosine(double a, double b, double c) {

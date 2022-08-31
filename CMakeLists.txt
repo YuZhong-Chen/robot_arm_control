@@ -155,6 +155,9 @@ include_directories(
 add_executable(Arm_Position_Pub src/Arm_Position_Pub.cpp src/Arm_INFO.cpp)
 target_link_libraries(Arm_Position_Pub ${catkin_LIBRARIES})
 
+add_executable(Arm_Velocity_Pub src/Arm_Velocity_Pub.cpp src/Arm_INFO.cpp)
+target_link_libraries(Arm_Velocity_Pub ${catkin_LIBRARIES})
+
 add_executable(Rviz_Arm_Position_node src/Rviz_Arm_Position_node.cpp src/Arm_INFO.cpp)
 target_link_libraries(Rviz_Arm_Position_node ${catkin_LIBRARIES})
 

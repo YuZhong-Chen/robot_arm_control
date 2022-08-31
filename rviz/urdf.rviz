@@ -4,9 +4,10 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Grid1
         - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/end_effector1
+        - /TF1/Frames1/end_effector1/Position1
       Splitter Ratio: 0.5235294103622437
     Tree Height: 560
   - Class: rviz/Selection
@@ -167,7 +168,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.6982948184013367
+      Distance: 0.9810539484024048
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -183,9 +184,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.37039685249328613
+      Pitch: 0.23539701104164124
       Target Frame: <world>
-      Yaw: 0.6985971331596375
+      Yaw: 6.036778926849365
     Saved: ~
 Window Geometry:
   Displays:
@@ -203,5 +204,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1528
-  X: 212
-  Y: 0
+  X: 2121
+  Y: 157

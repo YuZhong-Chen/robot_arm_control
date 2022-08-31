@@ -11,15 +11,20 @@ class RobotArm_INFO {
     RobotArm_INFO();
 
     std::string GetJointName(int num);
-    double GetJointAngle(int num);
+    double GetGoalJointAngle(int num);
+    double GetCurrentJointAngle(int num);
     double GetJointVelocity(int num);
-    double GetEndEffectorPosition(int num);
+    double GetGoalEndEffectorPosition(int num);
+    double GetCurrentEndEffectorPosition(int num);
 
-    bool SetJointAngle(int num, double NewValue);
+    void SetGoalJointAngle(int num, double NewValue);
+    void SetCurrentJointAngle(int num, double NewValue);
     bool SetJointVelocity(int num, double NewValue);
 
     // Set the End Effector Position and calculate each joint angle.
-    bool SetEndEffectorPosition(double x, double y, double z);
+    bool SetGoalEndEffectorPosition(double x, double y, double z);
+
+    bool isJointAngleLegal(int num, double angle);
 
     typedef struct _POINT {
         double x = 0.0;
@@ -30,23 +35,29 @@ class RobotArm_INFO {
    private:
     std::string JointName[5];
 
+    // 0 ~ 3 : Joint_1 ~ Joint_3
+    // 4 : Gripper_left and Gripper_right
     // Unit : Degree
-    double JointAngle[5];
+    double CurrentJointAngle[4];
+
+    double GoalJointAngle[4];
 
     // Unit : Degree / s
-    double JointVelocity[5];
+    double JointVelocity[4];
 
     // Unit : cm
     double ArmLinkLength[3];
 
-    // The position of the End-Effector.
+    // The current position of the End-Effector in 3D.
     // Unit : cm
-    POINT EndEffectorPosition;
+    POINT CurrentEndEffectorPosition;
+
+    // The goal position of the End-Effector in 3D.
+    // Unit : cm
+    POINT GoalEndEffectorPosition;
 
     // The Joint Min(first) and Max(second) Angle.
-    std::pair<double, double> JointAngleLimit[5];
-
-    bool isJointAngleLegal(double *angle);
+    std::pair<double, double> JointAngleLimit[4];
 };
 
 #endif

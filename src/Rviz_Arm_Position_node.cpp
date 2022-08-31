@@ -26,9 +26,10 @@ int main(int argc, char **argv) {
 
     unsigned int frame_seq = 0;
 
-    Cur_RobotArm_info.SetJointAngle(0, 90);
-    Cur_RobotArm_info.SetJointAngle(1, 180);
-    Cur_RobotArm_info.SetJointAngle(2, 180);
+    Cur_RobotArm_info.SetCurrentJointAngle(0, 90);
+    Cur_RobotArm_info.SetCurrentJointAngle(1, 180);
+    Cur_RobotArm_info.SetCurrentJointAngle(2, 180);
+    Cur_RobotArm_info.SetCurrentJointAngle(3, 0);
 
     while (nh.ok()) {
         if (isUpdate) {
@@ -38,14 +39,16 @@ int main(int argc, char **argv) {
         sensor_msgs::JointState msg;
         msg.header.seq = ++frame_seq;
         msg.header.stamp = ros::Time::now();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             msg.name.push_back(Cur_RobotArm_info.GetJointName(i));
         }
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(0)) * PI / 180.0);
-        msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(1)) * PI / 180.0);
-        msg.position.push_back((180 - Cur_RobotArm_info.GetJointAngle(2)) * PI / 180.0);
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(3)) * PI / 180.0);
-        msg.position.push_back((Cur_RobotArm_info.GetJointAngle(4)) * PI / 180.0);
+        msg.name.push_back(Cur_RobotArm_info.GetJointName(3) + "_left");
+        msg.name.push_back(Cur_RobotArm_info.GetJointName(3) + "_right");
+        msg.position.push_back((Cur_RobotArm_info.GetCurrentJointAngle(0)) * PI / 180.0);
+        msg.position.push_back((180 - Cur_RobotArm_info.GetCurrentJointAngle(1)) * PI / 180.0);
+        msg.position.push_back((180 - Cur_RobotArm_info.GetCurrentJointAngle(2)) * PI / 180.0);
+        msg.position.push_back((Cur_RobotArm_info.GetCurrentJointAngle(3)) * PI / 180.0);
+        msg.position.push_back(((-1 * Cur_RobotArm_info.GetCurrentJointAngle(3))) * PI / 180.0);
         jointState_pub.publish(msg);
 
         ros::spinOnce();
@@ -59,8 +62,8 @@ void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
     bool isFinish = true;
     for (int i = 0; i < 3; i++) {
         isFinish = false;
-        Goal_RobotArm_info.SetJointAngle(i, msg->position[i]);
-        Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * msg->velocity[i] / DISPLAY_FREQUENCY);
+        Goal_RobotArm_info.SetCurrentJointAngle(i, msg->position[i]);
+        Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * msg->velocity[i] / DISPLAY_FREQUENCY);
     }
 
     // std::cout << "Angle :\n";
@@ -87,18 +90,18 @@ void UpdateJointState() {
     bool isFinish = true;
     for (int i = 0; i < 3; i++) {
         if (Goal_RobotArm_info.GetJointVelocity(i) > 0) {
-            if (Cur_RobotArm_info.GetJointAngle(i) < Goal_RobotArm_info.GetJointAngle(i)) {
+            if (Cur_RobotArm_info.GetCurrentJointAngle(i) < Goal_RobotArm_info.GetCurrentJointAngle(i)) {
                 isFinish = false;
-                Cur_RobotArm_info.SetJointAngle(i, Cur_RobotArm_info.GetJointAngle(i) + Goal_RobotArm_info.GetJointVelocity(i));
+                Cur_RobotArm_info.SetCurrentJointAngle(i, Cur_RobotArm_info.GetCurrentJointAngle(i) + Goal_RobotArm_info.GetJointVelocity(i));
             } else {
-                Cur_RobotArm_info.SetJointAngle(i, Goal_RobotArm_info.GetJointAngle(i));
+                Cur_RobotArm_info.SetCurrentJointAngle(i, Goal_RobotArm_info.GetCurrentJointAngle(i));
             }
         } else {
-            if (Cur_RobotArm_info.GetJointAngle(i) > Goal_RobotArm_info.GetJointAngle(i)) {
+            if (Cur_RobotArm_info.GetCurrentJointAngle(i) > Goal_RobotArm_info.GetCurrentJointAngle(i)) {
                 isFinish = false;
-                Cur_RobotArm_info.SetJointAngle(i, Cur_RobotArm_info.GetJointAngle(i) + Goal_RobotArm_info.GetJointVelocity(i));
+                Cur_RobotArm_info.SetCurrentJointAngle(i, Cur_RobotArm_info.GetCurrentJointAngle(i) + Goal_RobotArm_info.GetJointVelocity(i));
             } else {
-                Cur_RobotArm_info.SetJointAngle(i, Goal_RobotArm_info.GetJointAngle(i));
+                Cur_RobotArm_info.SetCurrentJointAngle(i, Goal_RobotArm_info.GetCurrentJointAngle(i));
             }
         }
     }
