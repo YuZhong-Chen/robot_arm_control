@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
     RobotArm_info.SetGoalJointAngle(0, 90.0);
     RobotArm_info.SetGoalJointAngle(1, 180.0);
     RobotArm_info.SetGoalJointAngle(2, 180.0);
+    RobotArm_info.SetGoalJointAngle(3, 0.0);
 
     while (std::cin >> command) {
         if (command == "quit" || command == "q") {

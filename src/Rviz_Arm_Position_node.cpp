@@ -63,7 +63,7 @@ void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
     for (int i = 0; i < 3; i++) {
         isFinish = false;
         Goal_RobotArm_info.SetCurrentJointAngle(i, msg->position[i]);
-        Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * msg->velocity[i] / DISPLAY_FREQUENCY);
+        Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * fabs(msg->velocity[i]) / DISPLAY_FREQUENCY);
     }
 
     // std::cout << "Angle :\n";

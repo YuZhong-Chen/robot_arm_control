@@ -149,6 +149,12 @@ bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
     return true;
 }
 
+void RobotArm_INFO::SetCurrentEndEffectorPosition(double x, double y, double z) {
+    CurrentEndEffectorPosition.x = x;
+    CurrentEndEffectorPosition.y = y;
+    CurrentEndEffectorPosition.z = z;
+}
+
 bool RobotArm_INFO::isJointAngleLegal(int num, double angle) {
     if (isnan(angle) || angle < JointAngleLimit[num].first || angle > JointAngleLimit[num].second) {
         return false;

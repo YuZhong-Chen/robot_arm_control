@@ -23,6 +23,7 @@ class RobotArm_INFO {
 
     // Set the End Effector Position and calculate each joint angle.
     bool SetGoalEndEffectorPosition(double x, double y, double z);
+    void SetCurrentEndEffectorPosition(double x, double y, double z);
 
     bool isJointAngleLegal(int num, double angle);
 
@@ -39,7 +40,6 @@ class RobotArm_INFO {
     // 4 : Gripper_left and Gripper_right
     // Unit : Degree
     double CurrentJointAngle[4];
-
     double GoalJointAngle[4];
 
     // Unit : Degree / s
@@ -48,12 +48,9 @@ class RobotArm_INFO {
     // Unit : cm
     double ArmLinkLength[3];
 
-    // The current position of the End-Effector in 3D.
+    // The position of the End-Effector in 3D.
     // Unit : cm
     POINT CurrentEndEffectorPosition;
-
-    // The goal position of the End-Effector in 3D.
-    // Unit : cm
     POINT GoalEndEffectorPosition;
 
     // The Joint Min(first) and Max(second) Angle.
