@@ -6,7 +6,7 @@
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 
-#define VEL_UPDATE_FREQUENCY 10
+#define VEL_UPDATE_FREQUENCY 10.0
 
 static RobotArm_INFO RobotArm_info;
 static geometry_msgs::Vector3 EndEffectorVel;
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
     ros::Rate loop_rate(VEL_UPDATE_FREQUENCY);
 
-    RobotArm_info.SetCurrentEndEffectorPosition(0.0, 0.0, 21.0 + 17.0 + 12.3 - 0.01);
+    RobotArm_info.SetCurrentEndEffectorPosition(0.0, 17.0 + 12.3 - 0.001, 21.0 - 0.001);
     EndEffectorVel.x = EndEffectorVel.y = EndEffectorVel.z = 0.0;
 
     while (nh.ok()) {
@@ -35,7 +35,6 @@ int main(int argc, char **argv) {
             msg.position.push_back(RobotArm_info.GetGoalJointAngle(i));
             msg.velocity.push_back(RobotArm_info.GetJointVelocity(i));
             RobotArm_info.SetCurrentJointAngle(i, RobotArm_info.GetGoalJointAngle(i));
-            RobotArm_info.SetCurrentEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x, RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y, RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z);
         }
         JointState_pub.publish(msg);
 
@@ -57,9 +56,11 @@ void UpdateRobotArmVel() {
         for (int i = 0; i < 3; i++) {
             RobotArm_info.SetJointVelocity(i, (RobotArm_info.GetCurrentJointAngle(i) - RobotArm_info.GetGoalJointAngle(i)) * VEL_UPDATE_FREQUENCY);
         }
-    } else {
-        EndEffectorVel.x = EndEffectorVel.y = EndEffectorVel.z = 0.0;
+        RobotArm_info.SetCurrentEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x, RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y, RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z);
     }
+    // else {
+    //     std::cout << "Can't go to " << RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x << " " << RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y << " " << RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z << "\n";
+    // }
 
     std::cout << "Position : \n";
     std::cout << '\t' << "X : " << RobotArm_info.GetGoalEndEffectorPosition(0) << "\n";

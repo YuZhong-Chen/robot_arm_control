@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     unsigned int frame_seq = 0;
 
     Cur_RobotArm_info.SetCurrentJointAngle(0, 90);
-    Cur_RobotArm_info.SetCurrentJointAngle(1, 180);
+    Cur_RobotArm_info.SetCurrentJointAngle(1, 90);
     Cur_RobotArm_info.SetCurrentJointAngle(2, 180);
     Cur_RobotArm_info.SetCurrentJointAngle(3, 0);
 
@@ -65,24 +65,6 @@ void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
         Goal_RobotArm_info.SetCurrentJointAngle(i, msg->position[i]);
         Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * fabs(msg->velocity[i]) / DISPLAY_FREQUENCY);
     }
-
-    // std::cout << "Angle :\n";
-    // for (int i = 0; i < 3; i++) {
-    //     std::cout << Cur_RobotArm_info.GetJointName(i) << " : " << Cur_RobotArm_info.GetJointAngle(i) << '\n';
-    // }
-    // std::cout << "Velocity :\n";
-    // for (int i = 0; i < 3; i++) {
-    //     std::cout << Cur_RobotArm_info.GetJointName(i) << " : " << Cur_RobotArm_info.GetJointVelocity(i) << '\n';
-    // }
-    // std::cout << "Angle :\n";
-    // for (int i = 0; i < 3; i++) {
-    //     std::cout << Goal_RobotArm_info.GetJointName(i) << " : " << Goal_RobotArm_info.GetJointAngle(i) << '\n';
-    // }
-    // std::cout << "Velocity :\n";
-    // for (int i = 0; i < 3; i++) {
-    //     std::cout << Goal_RobotArm_info.GetJointName(i) << " : " << Goal_RobotArm_info.GetJointVelocity(i) << '\n';
-    // }
-
     isUpdate = !isFinish;
 }
 

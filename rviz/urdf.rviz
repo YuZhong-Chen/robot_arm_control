@@ -6,8 +6,6 @@ Panels:
       Expanded:
         - /TF1
         - /TF1/Frames1
-        - /TF1/Frames1/end_effector1
-        - /TF1/Frames1/end_effector1/Position1
       Splitter Ratio: 0.5235294103622437
     Tree Height: 560
   - Class: rviz/Selection
@@ -204,5 +202,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1528
-  X: 2121
-  Y: 157
+  X: 72
+  Y: 0
