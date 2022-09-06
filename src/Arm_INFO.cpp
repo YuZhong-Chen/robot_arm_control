@@ -89,7 +89,7 @@ void RobotArm_INFO::SetCurrentJointAngle(int num, double NewValue) {
 }
 
 bool RobotArm_INFO::SetJointVelocity(int num, double NewValue) {
-    if (num >= 0 && num <= 2 && NewValue != 0.0) {
+    if (NewValue != 0.0) {
         this->JointVelocity[num] = NewValue;
         return true;
     }

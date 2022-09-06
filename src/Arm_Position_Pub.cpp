@@ -20,18 +20,18 @@ int main(int argc, char **argv) {
     RobotArm_info.SetGoalJointAngle(0, 90.0);
     RobotArm_info.SetGoalJointAngle(1, 90.0);
     RobotArm_info.SetGoalJointAngle(2, 180.0);
-    RobotArm_info.SetGoalJointAngle(3, 0.0);
+    RobotArm_info.SetGoalJointAngle(3, 90.0);
 
     while (std::cin >> command) {
         if (command == "quit" || command == "q") {
             break;
         } else if (command == "show" || command == "s") {
             std::cout << "Angle :\n";
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 std::cout << '\t' << RobotArm_info.GetJointName(i) << " : " << RobotArm_info.GetGoalJointAngle(i) << '\n';
             }
             std::cout << "Velocity :\n";
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 std::cout << '\t' << RobotArm_info.GetJointName(i) << " : " << RobotArm_info.GetJointVelocity(i) << '\n';
             }
             std::cout << "Position : \n";
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
             std::cin >> command;
             if (command == "state" || command == "s") {
                 sensor_msgs::JointState msg;
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     msg.name.push_back(RobotArm_info.GetJointName(i));
                     msg.position.push_back(RobotArm_info.GetGoalJointAngle(i));
                     msg.velocity.push_back(RobotArm_info.GetJointVelocity(i));

@@ -1,13 +1,13 @@
 #include <iostream>
 #include <string>
 
-#include "geometry_msgs/Vector3.h"
 #include "ros/ros.h"
+#include "sensor_msgs/JointState.h"
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "Arm_Velocity_Pub");
     ros::NodeHandle nh;
-    ros::Publisher EndEffectorVel_pub = nh.advertise<geometry_msgs::Vector3>("RobotArmControl_Vel", 100);
+    ros::Publisher EndEffectorVel_pub = nh.advertise<sensor_msgs::JointState>("RobotArmControl_Vel", 100);
 
     std::string command;
     double input[3] = {0};
@@ -23,10 +23,11 @@ int main(int argc, char **argv) {
         } else if (command == "write" || command == "w") {
             std::cin >> input[0] >> input[1] >> input[2];
         } else if (command == "pub" || command == "p") {
-            geometry_msgs::Vector3 msg;
-            msg.x = input[0];
-            msg.y = input[1];
-            msg.z = input[2];
+            sensor_msgs::JointState msg;
+            for (int i = 0; i < 3; i++) {
+                msg.velocity.push_back(input[i]);
+            }
+            msg.velocity.push_back(90.0);
             EndEffectorVel_pub.publish(msg);
         }
     }

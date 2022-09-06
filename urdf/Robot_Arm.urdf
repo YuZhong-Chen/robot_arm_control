@@ -93,13 +93,13 @@
     <joint name="Gripper_left" type="continuous">
         <parent link="arm_link_3"/>
         <child link="gripper_left"/>
-        <origin rpy="0 0 0" xyz="-0.0175 0.015 0.064"/>
+        <origin rpy="-1.57 0 0" xyz="-0.0175 0.015 0.064"/>
     </joint>
 
     <joint name="Gripper_right" type="continuous">
         <parent link="arm_link_3"/>
         <child link="gripper_right"/>
-        <origin rpy="0 0 0" xyz="-0.0175 -0.015 0.064"/>
+        <origin rpy="1.57 0 0" xyz="-0.0175 -0.015 0.064"/>
     </joint>
 
     <joint name="arm_end_effector" type="fixed">

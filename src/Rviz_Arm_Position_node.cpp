@@ -26,10 +26,10 @@ int main(int argc, char **argv) {
 
     unsigned int frame_seq = 0;
 
-    Cur_RobotArm_info.SetCurrentJointAngle(0, 90);
-    Cur_RobotArm_info.SetCurrentJointAngle(1, 90);
-    Cur_RobotArm_info.SetCurrentJointAngle(2, 180);
-    Cur_RobotArm_info.SetCurrentJointAngle(3, 0);
+    Cur_RobotArm_info.SetCurrentJointAngle(0, 90.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(1, 90.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(2, 180.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(3, 90.0);
 
     while (nh.ok()) {
         if (isUpdate) {
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 
 void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
     bool isFinish = true;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         isFinish = false;
         Goal_RobotArm_info.SetCurrentJointAngle(i, msg->position[i]);
         Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * fabs(msg->velocity[i]) / DISPLAY_FREQUENCY);
@@ -70,7 +70,7 @@ void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
 
 void UpdateJointState() {
     bool isFinish = true;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         if (Goal_RobotArm_info.GetJointVelocity(i) > 0) {
             if (Cur_RobotArm_info.GetCurrentJointAngle(i) < Goal_RobotArm_info.GetCurrentJointAngle(i)) {
                 isFinish = false;

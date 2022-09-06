@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 
-#include "geometry_msgs/Vector3.h"
 #include "robot_arm_control/Arm_INFO.h"
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
@@ -9,9 +8,9 @@
 #define VEL_UPDATE_FREQUENCY 10.0
 
 static RobotArm_INFO RobotArm_info;
-static geometry_msgs::Vector3 EndEffectorVel;
+static sensor_msgs::JointState EndEffectorVel;
 
-void RobotArmControl_Vel_Callback(const geometry_msgs::Vector3::ConstPtr &msg);
+void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg);
 void UpdateRobotArmVel();
 
 int main(int argc, char **argv) {
@@ -24,13 +23,18 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(VEL_UPDATE_FREQUENCY);
 
     RobotArm_info.SetCurrentEndEffectorPosition(0.0, 17.0 + 12.3 - 0.001, 21.0 - 0.001);
-    EndEffectorVel.x = EndEffectorVel.y = EndEffectorVel.z = 0.0;
+    RobotArm_info.SetJointVelocity(3, 20);
+
+    for (int i = 0; i < 3; i++) {
+        EndEffectorVel.velocity.push_back(0.0);
+    }
+    RobotArm_info.SetGoalJointAngle(3, 90.0);  // This is Gripper angle.
 
     while (nh.ok()) {
         UpdateRobotArmVel();
 
         sensor_msgs::JointState msg;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             msg.name.push_back(RobotArm_info.GetJointName(i));
             msg.position.push_back(RobotArm_info.GetGoalJointAngle(i));
             msg.velocity.push_back(RobotArm_info.GetJointVelocity(i));
@@ -45,18 +49,19 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void RobotArmControl_Vel_Callback(const geometry_msgs::Vector3::ConstPtr &msg) {
-    EndEffectorVel.x = msg->x / VEL_UPDATE_FREQUENCY;
-    EndEffectorVel.y = msg->y / VEL_UPDATE_FREQUENCY;
-    EndEffectorVel.z = msg->z / VEL_UPDATE_FREQUENCY;
+void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
+    for (int i = 0; i < 4; i++) {
+        EndEffectorVel.velocity[i] = msg->velocity[i] / VEL_UPDATE_FREQUENCY;
+    }
+    RobotArm_info.SetGoalJointAngle(3, msg->velocity[3]);  // This is Gripper angle.
 }
 
 void UpdateRobotArmVel() {
-    if (RobotArm_info.SetGoalEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x, RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y, RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z)) {
+    if (RobotArm_info.SetGoalEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2])) {
         for (int i = 0; i < 3; i++) {
             RobotArm_info.SetJointVelocity(i, (RobotArm_info.GetCurrentJointAngle(i) - RobotArm_info.GetGoalJointAngle(i)) * VEL_UPDATE_FREQUENCY);
         }
-        RobotArm_info.SetCurrentEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x, RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y, RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z);
+        RobotArm_info.SetCurrentEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2]);
     }
     // else {
     //     std::cout << "Can't go to " << RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x << " " << RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y << " " << RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z << "\n";
