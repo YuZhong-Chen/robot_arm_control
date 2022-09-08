@@ -38,6 +38,11 @@ int main(int argc, char **argv) {
             std::cout << '\t' << "X : " << RobotArm_info.GetGoalEndEffectorPosition(0) << "\n";
             std::cout << '\t' << "Y : " << RobotArm_info.GetGoalEndEffectorPosition(1) << "\n";
             std::cout << '\t' << "Z : " << RobotArm_info.GetGoalEndEffectorPosition(2) << "\n";
+
+            for (int i = 0; i < 3; i++) {
+                RobotArm_info.SetCurrentJointAngle(i, RobotArm_info.GetGoalJointAngle(i));
+            }
+            RobotArm_info.ForwardKinematics();
         } else if (command == "write" || command == "w") {
             std::cin >> command;
             if (command == "ang" || command == "a") {

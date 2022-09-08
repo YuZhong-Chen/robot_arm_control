@@ -4,7 +4,9 @@
 
 #include <iostream>
 
-double LawOfCosine(double a, double b, double c);
+double LawOfSine_1(double a, double b, double B);
+double LawOfCosine_1(double a, double b, double c);
+double LawOfCosine_2(double a, double b, double C);
 
 RobotArm_INFO::RobotArm_INFO() {
     JointName[0] = "arm_joint_1";
@@ -117,9 +119,9 @@ bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
 
     double b = sqrt(a * a + ArmLinkLength[0] * ArmLinkLength[0] - 2 * a * ArmLinkLength[0] * cos(PI / 2 - atan((double)z / c)));
 
-    answer[1] = (LawOfCosine(ArmLinkLength[0], b, a) + LawOfCosine(ArmLinkLength[1], b, ArmLinkLength[2])) * 57.29577;
+    answer[1] = (LawOfCosine_1(ArmLinkLength[0], b, a) + LawOfCosine_1(ArmLinkLength[1], b, ArmLinkLength[2]));
 
-    answer[2] = LawOfCosine(ArmLinkLength[1], ArmLinkLength[2], b) * 57.29577;
+    answer[2] = LawOfCosine_1(ArmLinkLength[1], ArmLinkLength[2], b);
 
     if (!isJointAngleLegal(1, answer[1]) || !isJointAngleLegal(2, answer[2])) {
         return false;
@@ -149,6 +151,24 @@ bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
     return true;
 }
 
+void RobotArm_INFO::ForwardKinematics() {
+    double a = LawOfCosine_2(ArmLinkLength[1], ArmLinkLength[2], CurrentJointAngle[2]);
+    double A = LawOfSine_1(ArmLinkLength[2], a, CurrentJointAngle[2]);
+    double B = CurrentJointAngle[1] - A;
+    double b = LawOfCosine_2(ArmLinkLength[0], a, B);
+    double R = LawOfSine_1(a, b, B);
+    double l = b * sin(R * 0.017453);
+
+    double x = l * cos(CurrentJointAngle[0] * 0.017453);
+    double y = l * sin(CurrentJointAngle[0] * 0.017453);
+    double z = b * cos(R * 0.017453);
+
+    std::cout << "Forward Kinematics :\n";
+    std::cout << "\tX : " << x << '\n';
+    std::cout << "\tY : " << y << '\n';
+    std::cout << "\tZ : " << z << '\n';
+}
+
 void RobotArm_INFO::SetCurrentEndEffectorPosition(double x, double y, double z) {
     CurrentEndEffectorPosition.x = x;
     CurrentEndEffectorPosition.y = y;
@@ -163,9 +183,23 @@ bool RobotArm_INFO::isJointAngleLegal(int num, double angle) {
     }
 }
 
-double LawOfCosine(double a, double b, double c) {
+// Return A in Degree.
+double LawOfSine_1(double a, double b, double B) {
+    if (b == 0) {
+        return -1;  // wrong Input
+    }
+    return asin((a / b) * sin(B * 0.017453)) * 57.29577;
+}
+
+// Return C in Degree.
+double LawOfCosine_1(double a, double b, double c) {
     if (a == 0 || b == 0) {
         return -1;  // Wrong Input.
     }
-    return acos((a * a + b * b - c * c) / (2 * a * b));
+    return acos((a * a + b * b - c * c) / (2 * a * b)) * 57.29577;
+}
+
+// Return c
+double LawOfCosine_2(double a, double b, double C) {
+    return sqrt(a * a + b * b - 2 * a * b * cos(C * 0.017453));
 }

@@ -25,6 +25,8 @@ class RobotArm_INFO {
     bool SetGoalEndEffectorPosition(double x, double y, double z);
     void SetCurrentEndEffectorPosition(double x, double y, double z);
 
+    void ForwardKinematics();
+
     bool isJointAngleLegal(int num, double angle);
 
     typedef struct _POINT {
