@@ -1,4 +1,4 @@
-# robot_arm_control_pkg  
+# robot_arm_control  
 Use ROS noetic to control the Robot-Arm which is controlled by the microcontroller(STM32).  
 And I use Rviz to visualize the motion.  
 
@@ -38,12 +38,13 @@ And I use Rviz to visualize the motion.
     - (write / w) (vel / v) (關節編號) (速度)
     - (write / w) (both / b) (關節編號) (角度) (速度)
     - (write / w) (pos / p) (x y z 座標)
-    - (pub / p) (state / s) 
-    - (pub / p) (point / p)
+    - (pub / p) (state / s)  : Publish 關節資訊
+    - (pub / p) (point / p)  : Publish 目標
 - 速度更新 node
   - rosrun robot_arm_control Arm_Velocity_Update
 - 速度控制 node
   - rosrun robot_arm_control Arm_Velocity_Pub 
+    - 控制方式與控制位置差不多
 - Rviz 模擬 ：
   - roslaunch robot_arm_control Show_Robot_Arm.launch
   
