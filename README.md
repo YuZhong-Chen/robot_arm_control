@@ -47,5 +47,13 @@ And I use Rviz to visualize the motion.
     - 控制方式與控制位置差不多
 - Rviz 模擬 ：
   - roslaunch robot_arm_control Show_Robot_Arm.launch
-  
+ 
+ ---
+ 
+ ## 結果
+ 
+ Rviz 會顯示出 End Effector 的實際座標
+![](https://i.imgur.com/vgM9CSq.png)
+
+ 
  
