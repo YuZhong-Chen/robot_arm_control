@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+RobotArm_INFO RobotArm_info;
+
 double LawOfSine_1(double a, double b, double B);
 double LawOfCosine_1(double a, double b, double c);
 double LawOfCosine_2(double a, double b, double C);
@@ -18,6 +20,11 @@ RobotArm_INFO::RobotArm_INFO() {
     CurrentJointAngle[1] = 0;
     CurrentJointAngle[2] = 0;
     CurrentJointAngle[3] = 0;
+
+    GoalJointAngle[0] = 90.0;
+    GoalJointAngle[1] = 90.0;
+    GoalJointAngle[2] = 180.0;
+    GoalJointAngle[3] = 90.0;
 
     JointVelocity[0] = 20;
     JointVelocity[1] = 10;
@@ -98,7 +105,7 @@ bool RobotArm_INFO::SetJointVelocity(int num, double NewValue) {
     return false;
 }
 
-bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
+bool RobotArm_INFO::BackwardKinematics(double x, double y, double z, bool isSetGoalEndEffectorPosition) {
     double answer[3];
 
     if (z < 0.0) {
@@ -141,13 +148,15 @@ bool RobotArm_INFO::SetGoalEndEffectorPosition(double x, double y, double z) {
         }
     }
 
-    GoalEndEffectorPosition.x = x;
-    GoalEndEffectorPosition.y = y;
-    GoalEndEffectorPosition.z = z;
-
-    for (int i = 0; i < 3; i++) {
-        GoalJointAngle[i] = answer[i];
+    if (isSetGoalEndEffectorPosition) {
+        GoalEndEffectorPosition.x = x;
+        GoalEndEffectorPosition.y = y;
+        GoalEndEffectorPosition.z = z;
+        for (int i = 0; i < 3; i++) {
+            GoalJointAngle[i] = answer[i];
+        }
     }
+
     return true;
 }
 

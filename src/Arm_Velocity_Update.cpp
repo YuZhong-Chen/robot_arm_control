@@ -7,7 +7,7 @@
 
 #define VEL_UPDATE_FREQUENCY 10.0
 
-static RobotArm_INFO RobotArm_info;
+static RobotArm_INFO RobotArm_Info;
 static sensor_msgs::JointState EndEffectorVel;
 
 void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg);
@@ -22,23 +22,23 @@ int main(int argc, char **argv) {
 
     ros::Rate loop_rate(VEL_UPDATE_FREQUENCY);
 
-    RobotArm_info.SetCurrentEndEffectorPosition(0.0, 17.0 + 12.3 - 0.001, 21.0 - 0.001);
-    RobotArm_info.SetJointVelocity(3, 20);
+    RobotArm_Info.SetCurrentEndEffectorPosition(0.0, 17.0 + 12.3 - 0.001, 21.0 - 0.001);
+    RobotArm_Info.SetJointVelocity(3, 20);
 
     for (int i = 0; i < 3; i++) {
         EndEffectorVel.velocity.push_back(0.0);
     }
-    RobotArm_info.SetGoalJointAngle(3, 90.0);  // This is Gripper angle.
+    RobotArm_Info.SetGoalJointAngle(3, 90.0);  // This is Gripper angle.
 
     while (nh.ok()) {
         UpdateRobotArmVel();
 
         sensor_msgs::JointState msg;
         for (int i = 0; i < 4; i++) {
-            msg.name.push_back(RobotArm_info.GetJointName(i));
-            msg.position.push_back(RobotArm_info.GetGoalJointAngle(i));
-            msg.velocity.push_back(RobotArm_info.GetJointVelocity(i));
-            RobotArm_info.SetCurrentJointAngle(i, RobotArm_info.GetGoalJointAngle(i));
+            msg.name.push_back(RobotArm_Info.GetJointName(i));
+            msg.position.push_back(RobotArm_Info.GetGoalJointAngle(i));
+            msg.velocity.push_back(RobotArm_Info.GetJointVelocity(i));
+            RobotArm_Info.SetCurrentJointAngle(i, RobotArm_Info.GetGoalJointAngle(i));
         }
         JointState_pub.publish(msg);
 
@@ -53,22 +53,22 @@ void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) 
     for (int i = 0; i < 4; i++) {
         EndEffectorVel.velocity[i] = msg->velocity[i] / VEL_UPDATE_FREQUENCY;
     }
-    RobotArm_info.SetGoalJointAngle(3, msg->velocity[3]);  // This is Gripper angle.
+    RobotArm_Info.SetGoalJointAngle(3, msg->velocity[3]);  // This is Gripper angle.
 }
 
 void UpdateRobotArmVel() {
-    if (RobotArm_info.SetGoalEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2])) {
+    if (RobotArm_Info.BackwardKinematics(RobotArm_Info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_Info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_Info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2], true)) {
         for (int i = 0; i < 3; i++) {
-            RobotArm_info.SetJointVelocity(i, (RobotArm_info.GetCurrentJointAngle(i) - RobotArm_info.GetGoalJointAngle(i)) * VEL_UPDATE_FREQUENCY);
+            RobotArm_Info.SetJointVelocity(i, (RobotArm_Info.GetCurrentJointAngle(i) - RobotArm_Info.GetGoalJointAngle(i)) * VEL_UPDATE_FREQUENCY);
         }
-        RobotArm_info.SetCurrentEndEffectorPosition(RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2]);
+        RobotArm_Info.SetCurrentEndEffectorPosition(RobotArm_Info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.velocity[0], RobotArm_Info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.velocity[1], RobotArm_Info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.velocity[2]);
     }
     // else {
-    //     std::cout << "Can't go to " << RobotArm_info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x << " " << RobotArm_info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y << " " << RobotArm_info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z << "\n";
+    //     std::cout << "Can't go to " << RobotArm_Info.GetCurrentEndEffectorPosition(0) + EndEffectorVel.x << " " << RobotArm_Info.GetCurrentEndEffectorPosition(1) + EndEffectorVel.y << " " << RobotArm_Info.GetCurrentEndEffectorPosition(2) + EndEffectorVel.z << "\n";
     // }
 
     std::cout << "Position : \n";
-    std::cout << '\t' << "X : " << RobotArm_info.GetGoalEndEffectorPosition(0) << "\n";
-    std::cout << '\t' << "Y : " << RobotArm_info.GetGoalEndEffectorPosition(1) << "\n";
-    std::cout << '\t' << "Z : " << RobotArm_info.GetGoalEndEffectorPosition(2) << "\n";
+    std::cout << '\t' << "X : " << RobotArm_Info.GetGoalEndEffectorPosition(0) << "\n";
+    std::cout << '\t' << "Y : " << RobotArm_Info.GetGoalEndEffectorPosition(1) << "\n";
+    std::cout << '\t' << "Z : " << RobotArm_Info.GetGoalEndEffectorPosition(2) << "\n";
 }

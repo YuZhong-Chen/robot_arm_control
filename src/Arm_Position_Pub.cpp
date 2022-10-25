@@ -16,12 +16,6 @@ int main(int argc, char **argv) {
     int num;
     double input[3];
 
-    RobotArm_INFO RobotArm_info;
-    RobotArm_info.SetGoalJointAngle(0, 90.0);
-    RobotArm_info.SetGoalJointAngle(1, 90.0);
-    RobotArm_info.SetGoalJointAngle(2, 180.0);
-    RobotArm_info.SetGoalJointAngle(3, 90.0);
-
     while (std::cin >> command) {
         if (command == "quit" || command == "q") {
             break;
@@ -69,7 +63,7 @@ int main(int argc, char **argv) {
                 }
             } else if (command == "pos" || command == "p") {
                 std::cin >> input[0] >> input[1] >> input[2];
-                if (!RobotArm_info.SetGoalEndEffectorPosition(input[0], input[1], input[2])) {
+                if (!RobotArm_info.BackwardKinematics(input[0], input[1], input[2], true)) {
                     std::cout << "Wrong Position\n";
                 }
             }

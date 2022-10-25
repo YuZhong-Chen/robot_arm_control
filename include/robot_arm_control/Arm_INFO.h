@@ -21,11 +21,11 @@ class RobotArm_INFO {
     void SetCurrentJointAngle(int num, double NewValue);
     bool SetJointVelocity(int num, double NewValue);
 
-    // Set the End Effector Position and calculate each joint angle.
-    bool SetGoalEndEffectorPosition(double x, double y, double z);
+    // Set the End Effector Position.
     void SetCurrentEndEffectorPosition(double x, double y, double z);
 
     void ForwardKinematics();
+    bool BackwardKinematics(double x, double y, double z, bool isSetGoalEndEffectorPosition);
 
     bool isJointAngleLegal(int num, double angle);
 
@@ -58,5 +58,7 @@ class RobotArm_INFO {
     // The Joint Min(first) and Max(second) Angle.
     std::pair<double, double> JointAngleLimit[4];
 };
+
+extern RobotArm_INFO RobotArm_info;
 
 #endif

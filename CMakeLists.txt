@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -56,11 +57,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+    FILES
+    GetObject.srv 
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -70,10 +70,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+    DEPENDENCIES
+    std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -152,17 +152,23 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(Arm_Position_Pub src/Arm_Position_Pub.cpp src/Arm_INFO.cpp)
+add_executable(Arm_Position_Pub src/Arm_Position_Pub.cpp lib/Arm_INFO.cpp)
 target_link_libraries(Arm_Position_Pub ${catkin_LIBRARIES})
 
 add_executable(Arm_Velocity_Pub src/Arm_Velocity_Pub.cpp)
 target_link_libraries(Arm_Velocity_Pub ${catkin_LIBRARIES})
 
-add_executable(Arm_Velocity_Update src/Arm_Velocity_Update.cpp src/Arm_INFO.cpp)
+add_executable(Arm_Velocity_Update src/Arm_Velocity_Update.cpp lib/Arm_INFO.cpp)
 target_link_libraries(Arm_Velocity_Update ${catkin_LIBRARIES})
 
-add_executable(Rviz_Arm_Position_node src/Rviz_Arm_Position_node.cpp src/Arm_INFO.cpp)
+add_executable(Rviz_Arm_Position_node src/Rviz_Arm_Position_node.cpp lib/Arm_INFO.cpp)
 target_link_libraries(Rviz_Arm_Position_node ${catkin_LIBRARIES})
+
+add_executable(GetObject_server src/GetObject_server.cpp lib/Arm_INFO.cpp)
+target_link_libraries(GetObject_server ${catkin_LIBRARIES})
+
+add_executable(GetObject_client src/GetObject_client.cpp )
+target_link_libraries(GetObject_client ${catkin_LIBRARIES})
 
 #############
 ## Install ##
