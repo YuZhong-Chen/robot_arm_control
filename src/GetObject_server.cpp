@@ -3,31 +3,30 @@
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 
-#define DEBUG
+// #define DEBUG
 
 #define MAX_QUERY_TIME 3
 
 static int query_total = 0;
 
-typedef struct
-{
+typedef struct {
     bool isPub = false;
 } PUB_DATA;
 
-PUB_DATA PubData;
+static PUB_DATA PubData;
 
 static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_control::GetObject::Response &res) {
-    if (RobotArm_info.BackwardKinematics((double)req.x, (double)req.y, (double)req.z, true)) {
+    if (RobotArm.BackwardKinematics((double)req.x, (double)req.y, (double)req.z, true)) {
         res.isLegal = true;
         query_total++;
         PubData.isPub = true;
 
-#if defined(DEBUG)
+#ifdef DEBUG
         ROS_INFO("Pub: x=%d, y=%d, z=%d", (int)req.x, (int)req.y, (int)req.z);
 #endif
 
     } else {
-        return false;
+        res.isLegal = false;  // Or return false;
     }
 
     return true;
@@ -47,9 +46,9 @@ int main(int argc, char **argv) {
             PubData.isPub = false;
             sensor_msgs::JointState msg;
             for (int i = 0; i < 4; i++) {
-                msg.name.push_back(RobotArm_info.GetJointName(i));
-                msg.position.push_back(RobotArm_info.GetGoalJointAngle(i));
-                msg.velocity.push_back(RobotArm_info.GetJointVelocity(i));
+                msg.name.push_back(RobotArm.GetJointName(i));
+                msg.position.push_back(RobotArm.GetGoalJointAngle(i));
+                msg.velocity.push_back(RobotArm.GetJointVelocity(i));
             }
             JointState_pub.publish(msg);
         } else {

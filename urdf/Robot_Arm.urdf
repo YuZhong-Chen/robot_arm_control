@@ -3,7 +3,9 @@
 <!-- roslaunch urdf_tutorial display.launch model:='$(find robot_arm_control)/urdf/Robot_Arm.urdf' -->
 
 <robot name="Robot_Arm">
-    <link name="world"/>
+    <link name="world" />
+    <link name="Arm_Base" />
+    <link name="Camera" />
 
     <link name="arm_link_1">
         <visual>
@@ -69,9 +71,21 @@
 
     <!--######################################################################-->
 
+    <joint name="Arm_Locate" type="fixed">
+        <parent link="world"/>
+        <child link="Arm_Base"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.2 0.0"/>
+    </joint>
+
+    <joint name="Camera_Locate" type="fixed">
+        <parent link="arm_link_1"/>
+        <child link="Camera"/>
+        <origin rpy="3.14 0.5 0" xyz="0.0 -0.02 0.2"/>
+    </joint>
+
     <joint name="arm_joint_1" type="continuous">
         <axis xyz="0 0 1"/>
-        <parent link="world"/>
+        <parent link="Arm_Base"/>
         <child link="arm_link_1"/>
         <origin rpy="0 0 0" xyz="0.0 0.0 0.11"/>
     </joint>

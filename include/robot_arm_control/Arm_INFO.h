@@ -59,6 +59,6 @@ class RobotArm_INFO {
     std::pair<double, double> JointAngleLimit[4];
 };
 
-extern RobotArm_INFO RobotArm_info;
+extern RobotArm_INFO RobotArm;
 
 #endif

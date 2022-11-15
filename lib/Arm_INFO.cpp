@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-RobotArm_INFO RobotArm_info;
+RobotArm_INFO RobotArm;
 
 double LawOfSine_1(double a, double b, double B);
 double LawOfCosine_1(double a, double b, double c);

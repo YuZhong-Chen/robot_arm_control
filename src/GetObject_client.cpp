@@ -18,9 +18,14 @@ int main(int argc, char **argv) {
     srv.request.z = z;
 
     if (client.call(srv)) {
-        ROS_INFO("response: isLegel:%d", srv.response.isLegal);
+        if (srv.response.isLegal) {
+            ROS_INFO("Get Object at (%d,%d,%d).", srv.request.x, srv.request.y, srv.request.z);
+        } else {
+            ROS_ERROR("Wrong Coordinate.");
+        }
+
     } else {
-        ROS_ERROR("Failed to call service test_srv");
+        ROS_ERROR("Failed to call service GetObject_server");
         return EXIT_FAILURE;
     }
 

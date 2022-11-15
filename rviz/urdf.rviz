@@ -4,8 +4,11 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/end_effector1
+        - /TF1/Frames1/end_effector1/Position1
       Splitter Ratio: 0.5235294103622437
     Tree Height: 560
   - Class: rviz/Selection
@@ -57,6 +60,10 @@ Visualization Manager:
       Enabled: true
       Links:
         All Links Enabled: true
+        Arm_Base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
@@ -105,6 +112,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        Arm_Base:
+          Value: true
         arm_link_1:
           Value: true
         arm_link_2:
@@ -127,22 +136,23 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          arm_link_1:
-            arm_link_2:
-              arm_link_3:
-                end_effector:
-                  {}
-                gripper_left:
-                  {}
-                gripper_right:
-                  {}
+          Arm_Base:
+            arm_link_1:
+              arm_link_2:
+                arm_link_3:
+                  end_effector:
+                    {}
+                  gripper_left:
+                    {}
+                  gripper_right:
+                    {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: world
+    Fixed Frame: Arm_Base
     Frame Rate: 30
   Name: root
   Tools:
@@ -182,9 +192,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.23539701104164124
+      Pitch: 0.5353971123695374
       Target Frame: <world>
-      Yaw: 6.036778926849365
+      Yaw: 5.551764965057373
     Saved: ~
 Window Geometry:
   Displays:
