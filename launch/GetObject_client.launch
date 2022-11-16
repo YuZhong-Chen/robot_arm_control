@@ -1,0 +1,8 @@
+<launch>
+    <node name="GetObject_client" pkg="robot_arm_control" type="GetObject_client" output="screen">
+        <param name="x" type="int"  value="-10"/>
+        <param name="y" type="int"  value="10"/>
+        <param name="z" type="int"  value="20"/>
+    </node>
+    
+</launch>

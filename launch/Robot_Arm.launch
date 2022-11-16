@@ -12,7 +12,25 @@
     <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
 
     <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
-    <node unless="$(arg gui)" name="Rviz_Arm_Position_node" pkg="robot_arm_control" type="Rviz_Arm_Position_node" output="screen"/>
+    
+    <node unless="$(arg gui)" name="Rviz_Arm_Position_node" pkg="robot_arm_control" type="Rviz_Arm_Position_node" output="screen">
+        <param name="PubRobotArmState" type="bool" value="true"/>
+        <param name="Frequency"        type="int"  value="50"/>
+    </node>
+
+    <node name="GetObject_server" pkg="robot_arm_control" type="GetObject_server" output="screen">
+        <param name="Param_RobotArm_GrabAngle_Open"  type="int" value="90"/>
+        <param name="Param_RobotArm_GrabAngle_Close" type="int" value="110"/>
+
+        <param name="Param_RobotArm_PutAngle_0"      type="int" value="75"/>
+        <param name="Param_RobotArm_PutAngle_1"      type="int" value="200"/>
+        <param name="Param_RobotArm_PutAngle_2"      type="int" value="270"/>
+        
+        <param name="Param_RobotArm_PutAngle_Vel_0"  type="int" value="5"/>
+        <param name="Param_RobotArm_PutAngle_Vel_1"  type="int" value="20"/>
+        <param name="Param_RobotArm_PutAngle_Vel_2"  type="int" value="20"/>
+    </node>
+
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
     <node if="$(arg Launch_Rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />

@@ -2,14 +2,24 @@
 #include "ros/ros.h"
 
 static int x = 0;
-static int y = 10;
-static int z = 20;
+static int y = 20;
+static int z = 5;
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "GetObject_client");
 
     ros::NodeHandle nh;
     ros::ServiceClient client = nh.serviceClient<robot_arm_control::GetObject>("GetObject_service");
+
+    if (!nh.getParam("/GetObject_client/x", x)) {
+        x = 0;
+    }
+    if (!nh.getParam("/GetObject_client/y", y)) {
+        y = 0;
+    }
+    if (!nh.getParam("/GetObject_client/z", z)) {
+        z = 0;
+    }
 
     robot_arm_control::GetObject srv;
 

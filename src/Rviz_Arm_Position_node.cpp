@@ -5,12 +5,16 @@
 #include "robot_arm_control/Arm_INFO.h"
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
+#include "std_msgs/Bool.h"
 
-#define DISPLAY_FREQUENCY 50
+static int DISPLAY_FREQUENCY;
 
 static RobotArm_INFO Goal_RobotArm_info;
 static RobotArm_INFO Cur_RobotArm_info;
 static bool isUpdate = false;
+
+static std_msgs::Bool RobotAtmState_msg;
+static bool isPubRobotArmState;
 
 void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg);
 void UpdateJointState();
@@ -20,10 +24,17 @@ int main(int argc, char **argv) {
     ros::NodeHandle nh;
 
     ros::Publisher jointState_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1000);
-    ros::Subscriber RobotArmJointState_sub = nh.subscribe("RobotArmJointState", 100, RobotArmJointState_Callback);
+    ros::Publisher RobotArmState_pub = nh.advertise<std_msgs::Bool>("RobotArm_State", 1000);
+    ros::Subscriber RobotArmJointState_sub = nh.subscribe("RobotArmJointState", 1000, RobotArmJointState_Callback);
+
+    if (!nh.getParam("/Rviz_Arm_Position_node/PubRobotArmState", isPubRobotArmState)) {
+        isPubRobotArmState = false;
+    }
+    if (!nh.getParam("/Rviz_Arm_Position_node/Frequency", DISPLAY_FREQUENCY)) {
+        DISPLAY_FREQUENCY = 50;
+    }
 
     ros::Rate loop_rate(DISPLAY_FREQUENCY);  // Unit : Hz
-
     unsigned int frame_seq = 0;
 
     Cur_RobotArm_info.SetCurrentJointAngle(0, 90.0);
@@ -51,6 +62,10 @@ int main(int argc, char **argv) {
         msg.position.push_back(((-1 * Cur_RobotArm_info.GetCurrentJointAngle(3))) * PI / 180.0);
         jointState_pub.publish(msg);
 
+        if (isPubRobotArmState) {
+            RobotArmState_pub.publish(RobotAtmState_msg);
+        }
+
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -66,6 +81,7 @@ void RobotArmJointState_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
         Goal_RobotArm_info.SetJointVelocity(i, (Cur_RobotArm_info.GetCurrentJointAngle(i) <= msg->position[i] ? 1.0 : -1.0) * fabs(msg->velocity[i]) / DISPLAY_FREQUENCY);
     }
     isUpdate = !isFinish;
+    RobotAtmState_msg.data = isUpdate;
 }
 
 void UpdateJointState() {
@@ -88,4 +104,5 @@ void UpdateJointState() {
         }
     }
     isUpdate = !isFinish;
+    RobotAtmState_msg.data = isUpdate;
 }
