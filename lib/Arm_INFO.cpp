@@ -26,14 +26,15 @@ RobotArm_INFO::RobotArm_INFO() {
     GoalJointAngle[2] = 180.0;
     GoalJointAngle[3] = 90.0;
 
-    JointVelocity[0] = 20;
-    JointVelocity[1] = 10;
-    JointVelocity[2] = 10;
+    JointVelocity[0] = 5;
+    JointVelocity[1] = 5;
+    JointVelocity[2] = 25;
     JointVelocity[3] = 10;
 
-    ArmLinkLength[0] = 21.0;
-    ArmLinkLength[1] = 17.0;
-    ArmLinkLength[2] = 12.3;
+    // TODO  Change the value.
+    ArmLinkLength[0] = 18.7;
+    ArmLinkLength[1] = 17.4;
+    ArmLinkLength[2] = 14.0;
 
     JointAngleLimit[0].first = -30.0;
     JointAngleLimit[0].second = 210.0;

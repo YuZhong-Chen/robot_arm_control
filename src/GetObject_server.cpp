@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
 
     ros::Subscriber RobotArmState_sub = nh.subscribe("RobotArm_State", 1000, RobotArmState_Callback);
     ros::Publisher JointState_pub = nh.advertise<sensor_msgs::JointState>("RobotArmJointState", 1000);
+    ros::Publisher Stowage_pub = nh.advertise<std_msgs::Bool>("StowageState", 1000);
     ros::ServiceServer Server = nh.advertiseService("GetObject_service", Callback);
 
     if (!nh.getParam("/GetObject_server/Param_RobotArm_GrabAngle_Open", Param_RobotArm_GrabAngle_Open)) {
@@ -74,9 +75,10 @@ int main(int argc, char **argv) {
     // ros Loop.
     // ------------------------------------------------------------------
     while (nh.ok()) {
-        if (query_total >= MAX_QUERY_TIME) {
-            break;
-        } else if (isGetObject) {
+        // if (query_total == MAX_QUERY_TIME) {
+        //     break;
+        // }
+        if (isGetObject) {
             isGetObject = false;
             Robot_Arm_State = GET_OBJECT;
         } else {
@@ -85,8 +87,11 @@ int main(int argc, char **argv) {
         }
 
         switch (Robot_Arm_State) {
-            case IDLE:
-                break;
+            case IDLE: {
+                std_msgs::Bool msg;
+                msg.data = false;
+                Stowage_pub.publish(msg);
+            } break;
             case GET_OBJECT: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
@@ -95,11 +100,12 @@ int main(int argc, char **argv) {
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.position[3] = Param_RobotArm_GrabAngle_Open;
-                msg.velocity[3] = 50;
+                msg.velocity[3] = 10;
                 JointState_pub.publish(msg);
                 Robot_Arm_State = GET_OBJECTING;
             } break;
             case GRAB: {
+                ros::Duration(1.0).sleep();
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
                     msg.name.push_back(RobotArm.GetJointName(i));
@@ -107,10 +113,14 @@ int main(int argc, char **argv) {
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.position[3] = Param_RobotArm_GrabAngle_Close;
-                msg.velocity[3] = 50;
+                msg.velocity[3] = 10;
                 JointState_pub.publish(msg);
                 Robot_Arm_State = GRABBING;
             } break;
+            case GRABBING:
+                Robot_Arm_State = PUT_OBJECT;
+                ros::Duration(1.0).sleep();
+                break;
             case PUT_OBJECT: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 3; i++) {
@@ -120,7 +130,7 @@ int main(int argc, char **argv) {
                 }
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Close);
-                msg.velocity.push_back(50);
+                msg.velocity.push_back(5);
                 JointState_pub.publish(msg);
                 Robot_Arm_State = PUT_OBJECTING;
             } break;
@@ -133,7 +143,7 @@ int main(int argc, char **argv) {
                 }
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Open);
-                msg.velocity.push_back(500);
+                msg.velocity.push_back(5);
                 JointState_pub.publish(msg);
                 Robot_Arm_State = IDLE;
             } break;

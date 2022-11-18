@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
         if (srv.response.isLegal) {
             ROS_INFO("Get Object at (%d,%d,%d).", srv.request.x, srv.request.y, srv.request.z);
         } else {
-            ROS_ERROR("Wrong Coordinate.");
+            ROS_ERROR("Wrong Coordinate : (%d,%d,%d).", srv.request.x, srv.request.y, srv.request.z);
         }
 
     } else {
