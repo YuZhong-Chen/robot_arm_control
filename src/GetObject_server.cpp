@@ -87,12 +87,13 @@ int main(int argc, char **argv) {
         }
 
         switch (Robot_Arm_State) {
-            case IDLE: {
-                std_msgs::Bool msg;
-                msg.data = false;
-                Stowage_pub.publish(msg);
-            } break;
+            case IDLE:
+                break;
             case GET_OBJECT: {
+                std_msgs::Bool Stowage_msg;
+                Stowage_msg.data = false;
+                Stowage_pub.publish(Stowage_msg);
+
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
                     msg.name.push_back(RobotArm.GetJointName(i));
