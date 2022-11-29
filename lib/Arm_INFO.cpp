@@ -27,7 +27,7 @@ RobotArm_INFO::RobotArm_INFO() {
     GoalJointAngle[3] = 110.0;
 
     JointVelocity[0] = 5;
-    JointVelocity[1] = 5;
+    JointVelocity[1] = 20;
     JointVelocity[2] = 20;
     JointVelocity[3] = 5;
 
