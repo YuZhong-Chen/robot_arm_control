@@ -24,6 +24,7 @@ enum RobotArmState {
 static bool RobotArmStatus = false;
 static int Robot_Arm_State = IDLE;
 static bool isFinish = false;
+static int Last_State;
 
 static int Param_RobotArm_GrabAngle_Open;
 static int Param_RobotArm_GrabAngle_Close;
@@ -184,23 +185,29 @@ static void RobotArmState_Callback(const std_msgs::Bool::ConstPtr &msg) {
                 break;
             case TAKING_PICTURE:
                 Robot_Arm_State = IDLE;
+                Last_State = TAKING_PICTURE;
                 isFinish = true;
                 break;
             case GET_OBJECTING:
                 Robot_Arm_State = GRAB;
+                Last_State = GET_OBJECTING;
                 break;
             case GRABBING:
                 Robot_Arm_State = PUT_OBJECT;
+                Last_State = GRABBING;
                 break;
             case PUT_OBJECTING:
                 Robot_Arm_State = RELEASE;
+                Last_State = PUT_OBJECTING;
                 break;
             case RELEASING:
                 Robot_Arm_State = IDLE;
+                Last_State = RELEASING;
                 isFinish = true;
                 break;
             case STOPPING:
                 Robot_Arm_State = IDLE;
+                Last_State = STOPPING;
                 isFinish = true;
                 break;
             default:
@@ -216,7 +223,11 @@ static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_contr
         Robot_Arm_State = STOP;
     } else if (req.x == -1 && req.y == -1 && req.z == -1) {
         res.isLegal = true;
-        Robot_Arm_State = TAKE_PICTURE;
+        if (Last_State == TAKING_PICTURE) {
+            isFinish = true;
+        } else {
+            Robot_Arm_State = TAKE_PICTURE;
+        }
     } else if (RobotArm.BackwardKinematics((double)req.x, (double)req.y, (double)req.z, true)) {
         res.isLegal = true;
         Robot_Arm_State = GET_OBJECT;
