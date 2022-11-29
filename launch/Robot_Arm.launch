@@ -26,9 +26,6 @@
         <param name="Param_RobotArm_PutAngle_1"      type="int" value="200"/>
         <param name="Param_RobotArm_PutAngle_2"      type="int" value="250"/>
         
-        <param name="Param_RobotArm_PutAngle_Vel_0"  type="int" value="5"/>
-        <param name="Param_RobotArm_PutAngle_Vel_1"  type="int" value="20"/>
-        <param name="Param_RobotArm_PutAngle_Vel_2"  type="int" value="25"/>
     </node>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />

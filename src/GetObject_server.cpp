@@ -57,9 +57,6 @@ int main(int argc, char **argv) {
     nh_Private.param<int>("Param_RobotArm_PutAngle_0", Param_RobotArm_PutAngle[0], 90);
     nh_Private.param<int>("Param_RobotArm_PutAngle_1", Param_RobotArm_PutAngle[1], 190);
     nh_Private.param<int>("Param_RobotArm_PutAngle_2", Param_RobotArm_PutAngle[2], 270);
-    nh_Private.param<int>("Param_RobotArm_PutAngle_Vel_0", Param_RobotArm_PutAngle_Vel[0], 5);
-    nh_Private.param<int>("Param_RobotArm_PutAngle_Vel_1", Param_RobotArm_PutAngle_Vel[1], 5);
-    nh_Private.param<int>("Param_RobotArm_PutAngle_Vel_2", Param_RobotArm_PutAngle_Vel[2], 5);
 
     // ------------------------------------------------------------------
     // ros Loop.
