@@ -220,7 +220,11 @@ static void RobotArmState_Callback(const std_msgs::Bool::ConstPtr &msg) {
 static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_control::GetObject::Response &res) {
     if (req.x == 0 && req.y == 0 && req.z == 0) {
         res.isLegal = true;
-        Robot_Arm_State = STOP;
+        if (Last_State == STOPPING) {
+            isFinish = true;
+        } else {
+            Robot_Arm_State = STOP;
+        }
     } else if (req.x == -1 && req.y == -1 && req.z == -1) {
         res.isLegal = true;
         if (Last_State == TAKING_PICTURE) {
