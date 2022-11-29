@@ -29,7 +29,6 @@ static int Last_State;
 static int Param_RobotArm_GrabAngle_Open;
 static int Param_RobotArm_GrabAngle_Close;
 static int Param_RobotArm_PutAngle[3];
-static int Param_RobotArm_PutAngle_Vel[3];
 
 static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_control::GetObject::Response &res);
 static void RobotArmState_Callback(const std_msgs::Bool::ConstPtr &msg);
@@ -115,7 +114,7 @@ int main(int argc, char **argv) {
                 for (int i = 0; i < 3; i++) {
                     msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(Param_RobotArm_PutAngle[i]);
-                    msg.velocity.push_back(Param_RobotArm_PutAngle_Vel[i]);
+                    msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Close);
@@ -128,7 +127,7 @@ int main(int argc, char **argv) {
                 for (int i = 0; i < 3; i++) {
                     msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(Param_RobotArm_PutAngle[i]);
-                    msg.velocity.push_back(Param_RobotArm_PutAngle_Vel[i]);
+                    msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Open);
