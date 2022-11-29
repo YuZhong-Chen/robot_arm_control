@@ -22,28 +22,28 @@ RobotArm_INFO::RobotArm_INFO() {
     CurrentJointAngle[3] = 0;
 
     GoalJointAngle[0] = 90.0;
-    GoalJointAngle[1] = 90.0;
-    GoalJointAngle[2] = 180.0;
-    GoalJointAngle[3] = 90.0;
+    GoalJointAngle[1] = 289.0;
+    GoalJointAngle[2] = 90.0;
+    GoalJointAngle[3] = 110.0;
 
     JointVelocity[0] = 5;
     JointVelocity[1] = 5;
-    JointVelocity[2] = 25;
-    JointVelocity[3] = 10;
+    JointVelocity[2] = 20;
+    JointVelocity[3] = 5;
 
     // TODO  Change the value.
     ArmLinkLength[0] = 18.7;
-    ArmLinkLength[1] = 17.4;
-    ArmLinkLength[2] = 14.0;
+    ArmLinkLength[1] = 17.0;
+    ArmLinkLength[2] = 12.5;
 
-    JointAngleLimit[0].first = -30.0;
+    JointAngleLimit[0].first = 30.0;
     JointAngleLimit[0].second = 210.0;
-    JointAngleLimit[1].first = 10.0;
-    JointAngleLimit[1].second = 330.0;
-    JointAngleLimit[2].first = 10.0;
-    JointAngleLimit[2].second = 330.0;
-    JointAngleLimit[3].first = -30.0;
-    JointAngleLimit[3].second = 180.0;
+    JointAngleLimit[1].first = 45.0;
+    JointAngleLimit[1].second = 300.0;
+    JointAngleLimit[2].first = 80.0;
+    JointAngleLimit[2].second = 280.0;
+    JointAngleLimit[3].first = 70.0;
+    JointAngleLimit[3].second = 140.0;
 }
 
 std::string RobotArm_INFO::GetJointName(int num) {

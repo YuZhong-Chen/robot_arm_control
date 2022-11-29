@@ -23,9 +23,9 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "Rviz_Arm_Position_node");
     ros::NodeHandle nh;
 
-    ros::Publisher jointState_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1000);
-    ros::Publisher RobotArmState_pub = nh.advertise<std_msgs::Bool>("RobotArm_State", 1000);
-    ros::Subscriber RobotArmJointState_sub = nh.subscribe("RobotArmJointState", 1000, RobotArmJointState_Callback);
+    ros::Publisher jointState_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
+    ros::Publisher RobotArmState_pub = nh.advertise<std_msgs::Bool>("RobotArm_State", 1);
+    ros::Subscriber RobotArmJointState_sub = nh.subscribe("RobotArmJointState", 1, RobotArmJointState_Callback);
 
     if (!nh.getParam("/Rviz_Arm_Position_node/PubRobotArmState", isPubRobotArmState)) {
         isPubRobotArmState = false;
@@ -38,9 +38,9 @@ int main(int argc, char **argv) {
     unsigned int frame_seq = 0;
 
     Cur_RobotArm_info.SetCurrentJointAngle(0, 90.0);
-    Cur_RobotArm_info.SetCurrentJointAngle(1, 90.0);
-    Cur_RobotArm_info.SetCurrentJointAngle(2, 180.0);
-    Cur_RobotArm_info.SetCurrentJointAngle(3, 90.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(1, 289.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(2, 90.0);
+    Cur_RobotArm_info.SetCurrentJointAngle(3, 110.0);
 
     while (nh.ok()) {
         if (isUpdate) {
