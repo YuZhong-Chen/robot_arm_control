@@ -5,7 +5,7 @@
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 
-#define VEL_UPDATE_FREQUENCY 2.0
+#define VEL_UPDATE_FREQUENCY 5.0
 
 static sensor_msgs::JointState Joint;
 
