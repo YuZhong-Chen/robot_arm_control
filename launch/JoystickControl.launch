@@ -1,5 +1,10 @@
 <launch>
 
-    <node name="JoystickControl" pkg="robot_arm_control" type="JoystickControl" output="screen" />
+    <node name="JoystickControl" pkg="robot_arm_control" type="JoystickControl" output="screen">
+        <param name="JointVelocity_0"       type="int" value="5"/>
+        <param name="JointVelocity_1"       type="int" value="5"/>
+        <param name="JointVelocity_2"       type="int" value="5"/>
+        <param name="JointVelocity_Gripper" type="int" value="5"/>
+    </node>
     
 </launch>

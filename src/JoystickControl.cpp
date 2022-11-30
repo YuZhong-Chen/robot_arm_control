@@ -9,15 +9,23 @@
 
 static sensor_msgs::JointState Joint;
 
+int JointVelocity[4];
+
 void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg);
 void UpdateRobotArmVel();
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "JoystickControl");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh_Public;
+    ros::NodeHandle nh_Private("~");
 
-    ros::Publisher JointState_pub = nh.advertise<sensor_msgs::JointState>("RobotArmJointState", 1);
-    ros::Subscriber RobotArmControl_Vel_sub = nh.subscribe("RobotArmControl_Vel", 1, RobotArmControl_Vel_Callback);
+    ros::Publisher JointState_pub = nh_Public.advertise<sensor_msgs::JointState>("RobotArmJointState", 1);
+    ros::Subscriber RobotArmControl_Vel_sub = nh_Public.subscribe("RobotArmControl_Vel", 1, RobotArmControl_Vel_Callback);
+
+    nh_Private.param<int>("JointVelocity_0", JointVelocity[0], 1);
+    nh_Private.param<int>("JointVelocity_1", JointVelocity[1], 1);
+    nh_Private.param<int>("JointVelocity_2", JointVelocity[2], 1);
+    nh_Private.param<int>("JointVelocity_Gripper", JointVelocity[3], 1);
 
     Joint.position.push_back(90);
     Joint.position.push_back(289);
@@ -31,7 +39,7 @@ int main(int argc, char **argv) {
 
     ros::Rate loop_rate(VEL_UPDATE_FREQUENCY);
 
-    while (nh.ok()) {
+    while (nh_Public.ok()) {
         UpdateRobotArmVel();
         JointState_pub.publish(Joint);
 
@@ -43,10 +51,10 @@ int main(int argc, char **argv) {
 }
 
 void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
-    Joint.velocity[0] = msg->velocity[2];
-    Joint.velocity[1] = msg->velocity[1];
-    Joint.velocity[2] = msg->velocity[0];
-    Joint.velocity[3] = msg->velocity[3];
+    Joint.velocity[0] = msg->velocity[2] * JointVelocity[0];
+    Joint.velocity[1] = msg->velocity[1] * JointVelocity[1];
+    Joint.velocity[2] = msg->velocity[0] * JointVelocity[2];
+    Joint.velocity[3] = msg->velocity[3] * JointVelocity[3];
 }
 
 void UpdateRobotArmVel() {
