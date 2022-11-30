@@ -25,6 +25,7 @@ static bool RobotArmStatus = false;
 static int Robot_Arm_State = IDLE;
 static bool isFinish = false;
 static bool isStowageOpen = false;
+static bool isStowageClose = false;
 static int Last_State;
 
 static int Param_RobotArm_GrabAngle_Open;
@@ -162,11 +163,18 @@ int main(int argc, char **argv) {
             for (int i = 0; i < 3; i++) {
                 Stowage_pub.publish(Stowage_msg);
             }
-            ros::Duration(2.0).sleep();
+            ros::Duration(1.5).sleep();
+            isFinish = true;
+        }
+
+        if (isStowageClose) {
+            isStowageClose = false;
+            std_msgs::Bool Stowage_msg;
             Stowage_msg.data = false;
             for (int i = 0; i < 3; i++) {
                 Stowage_pub.publish(Stowage_msg);
             }
+            ros::Duration(1.5).sleep();
             isFinish = true;
         }
 
@@ -246,6 +254,10 @@ static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_contr
         }
     } else if (req.x == -2 && req.y == -2 && req.z == -2) {
         isStowageOpen = true;
+        Robot_Arm_State = IDLE;
+        res.isLegal = true;
+    } else if (req.x == -3 && req.y == -3 && req.z == -3) {
+        isStowageClose = true;
         Robot_Arm_State = IDLE;
         res.isLegal = true;
     } else if (RobotArm.BackwardKinematics((double)req.x, (double)req.y, (double)req.z, true)) {
