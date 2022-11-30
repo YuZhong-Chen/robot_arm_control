@@ -38,19 +38,27 @@ int main(int argc, char **argv) {
 }
 
 void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
-    for (int i = 0; i < 4; i++) {
-        Joint.velocity[i] = msg->velocity[i];
-    }
+    Joint.velocity[0] = msg->velocity[2];
+    Joint.velocity[1] = msg->velocity[1];
+    Joint.velocity[2] = msg->velocity[0];
+    Joint.velocity[3] = msg->velocity[3];
 }
 
 void UpdateRobotArmVel() {
-    for (int i = 0; i < 3; i++) {
-        if (Joint.velocity[i] != 0) {
-            if (i == 0 || i == 1) {
-                Joint.position[i] = 1000 * Joint.velocity[i];
-            } else {
-                Joint.position[i] += Joint.velocity[i] / VEL_UPDATE_FREQUENCY;
-            }
-        }
+    Joint.position[0] = 1000 * Joint.velocity[0];
+    Joint.position[1] = 1000 * Joint.velocity[1];
+
+    Joint.position[2] += Joint.velocity[2] / VEL_UPDATE_FREQUENCY;
+    if (Joint.position[2] <= 80) {
+        Joint.position[2] = 80;
+    } else if (Joint.position[2] > 300) {
+        Joint.position[2] = 300;
+    }
+
+    Joint.position[3] += Joint.velocity[3] / VEL_UPDATE_FREQUENCY;
+    if (Joint.position[3] <= 80) {
+        Joint.position[3] = 80;
+    } else if (Joint.position[3] > 130) {
+        Joint.position[3] = 130;
     }
 }
