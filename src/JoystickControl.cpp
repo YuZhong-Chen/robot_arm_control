@@ -50,7 +50,7 @@ void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) 
 }
 
 void UpdateRobotArmVel() {
-    Joint.position[0] = 1000 * Joint.velocity[0];
+    // Joint.position[0] = 1000 * Joint.velocity[0];
     Joint.position[1] = 1000 * Joint.velocity[1];
 
     Joint.position[2] += Joint.velocity[2] / VEL_UPDATE_FREQUENCY;
