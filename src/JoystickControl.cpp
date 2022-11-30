@@ -24,6 +24,11 @@ int main(int argc, char **argv) {
     Joint.position.push_back(90);
     Joint.position.push_back(110);
 
+    Joint.velocity.push_back(0);
+    Joint.velocity.push_back(0);
+    Joint.velocity.push_back(0);
+    Joint.velocity.push_back(0);
+
     ros::Rate loop_rate(VEL_UPDATE_FREQUENCY);
 
     while (nh.ok()) {
