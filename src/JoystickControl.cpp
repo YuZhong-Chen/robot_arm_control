@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
 
     while (nh.ok()) {
         UpdateRobotArmVel();
-
         JointState_pub.publish(Joint);
 
         ros::spinOnce();
@@ -40,9 +39,18 @@ int main(int argc, char **argv) {
 
 void RobotArmControl_Vel_Callback(const sensor_msgs::JointState::ConstPtr &msg) {
     for (int i = 0; i < 4; i++) {
-        Joint.velocity[i] = msg->velocity[i] / VEL_UPDATE_FREQUENCY;
+        Joint.velocity[i] = msg->velocity[i];
     }
 }
 
 void UpdateRobotArmVel() {
+    for (int i = 0; i < 3; i++) {
+        if (Joint.velocity[i] != 0) {
+            if (i == 0 || i == 1) {
+                Joint.position[i] = 1000 * Joint.velocity[i];
+            } else {
+                Joint.position[i] += Joint.velocity[i] / VEL_UPDATE_FREQUENCY;
+            }
+        }
+    }
 }

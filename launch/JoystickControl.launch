@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="JoystickControl" pkg="robot_arm_control" type="JoystickControl" output="screen" />
+    
+</launch>
