@@ -24,6 +24,7 @@ enum RobotArmState {
 static bool RobotArmStatus = false;
 static int Robot_Arm_State = IDLE;
 static bool isFinish = false;
+static bool isStowageOpen = false;
 static int Last_State;
 
 static int Param_RobotArm_GrabAngle_Open;
@@ -68,7 +69,7 @@ int main(int argc, char **argv) {
             case TAKE_PICTURE: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.position.push_back(90);
@@ -83,7 +84,7 @@ int main(int argc, char **argv) {
             case GET_OBJECT: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(RobotArm.GetGoalJointAngle(i));
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
@@ -96,7 +97,7 @@ int main(int argc, char **argv) {
                 ros::Duration(1.0).sleep();
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(RobotArm.GetGoalJointAngle(i));
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
@@ -112,7 +113,7 @@ int main(int argc, char **argv) {
 
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 3; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(Param_RobotArm_PutAngle[i]);
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
@@ -125,7 +126,7 @@ int main(int argc, char **argv) {
             case RELEASE: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 3; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.position.push_back(Param_RobotArm_PutAngle[i]);
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
@@ -138,7 +139,7 @@ int main(int argc, char **argv) {
             case STOP: {
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 4; i++) {
-                    msg.name.push_back(RobotArm.GetJointName(i));
+                    // msg.name.push_back(RobotArm.GetJointName(i));
                     msg.velocity.push_back(RobotArm.GetJointVelocity(i));
                 }
                 msg.position.push_back(90);
@@ -152,6 +153,21 @@ int main(int argc, char **argv) {
             } break;
             default:
                 break;
+        }
+
+        if (isStowageOpen) {
+            isStowageOpen = false;
+            std_msgs::Bool Stowage_msg;
+            Stowage_msg.data = true;
+            for (int i = 0; i < 3; i++) {
+                Stowage_pub.publish(Stowage_msg);
+            }
+            ros::Duration(2.0).sleep();
+            Stowage_msg.data = false;
+            for (int i = 0; i < 3; i++) {
+                Stowage_pub.publish(Stowage_msg);
+            }
+            isFinish = true;
         }
 
         if (isFinish) {
@@ -228,6 +244,10 @@ static bool Callback(robot_arm_control::GetObject::Request &req, robot_arm_contr
         } else {
             Robot_Arm_State = TAKE_PICTURE;
         }
+    } else if (req.x == -2 && req.y == -2 && req.z == -2) {
+        isStowageOpen = true;
+        Robot_Arm_State = IDLE;
+        res.isLegal = true;
     } else if (RobotArm.BackwardKinematics((double)req.x, (double)req.y, (double)req.z, true)) {
         res.isLegal = true;
         Robot_Arm_State = GET_OBJECT;

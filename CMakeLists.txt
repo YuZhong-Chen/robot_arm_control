@@ -171,6 +171,9 @@ target_link_libraries(GetObject_server ${catkin_LIBRARIES})
 add_executable(GetObject_client src/GetObject_client.cpp )
 target_link_libraries(GetObject_client ${catkin_LIBRARIES})
 
+add_executable(JoystickControl src/JoystickControl.cpp lib/Arm_INFO.cpp)
+target_link_libraries(JoystickControl ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############

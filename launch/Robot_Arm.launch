@@ -22,9 +22,9 @@
         <param name="Param_RobotArm_GrabAngle_Open"  type="int" value="100"/>
         <param name="Param_RobotArm_GrabAngle_Close" type="int" value="120"/>
 
-        <param name="Param_RobotArm_PutAngle_0"      type="int" value="75"/>
-        <param name="Param_RobotArm_PutAngle_1"      type="int" value="200"/>
-        <param name="Param_RobotArm_PutAngle_2"      type="int" value="250"/>
+        <param name="Param_RobotArm_PutAngle_0"      type="int" value="90"/>
+        <param name="Param_RobotArm_PutAngle_1"      type="int" value="210"/>
+        <param name="Param_RobotArm_PutAngle_2"      type="int" value="260"/>
         
     </node>
 
