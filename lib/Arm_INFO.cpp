@@ -36,9 +36,9 @@ RobotArm_INFO::RobotArm_INFO() {
     ArmLinkLength[1] = 17.0;
     ArmLinkLength[2] = 12.5;
 
-    JointAngleLimit[0].first = 30.0;
+    JointAngleLimit[0].first = 10.0;
     JointAngleLimit[0].second = 210.0;
-    JointAngleLimit[1].first = 45.0;
+    JointAngleLimit[1].first = 30.0;
     JointAngleLimit[1].second = 300.0;
     JointAngleLimit[2].first = 80.0;
     JointAngleLimit[2].second = 280.0;
