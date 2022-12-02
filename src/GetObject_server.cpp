@@ -79,7 +79,9 @@ int main(int argc, char **argv) {
                 msg.position.push_back(110);
                 msg.position[3] = Param_RobotArm_GrabAngle_Open;
                 msg.velocity[3] = 10;
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = TAKING_PICTURE;
             } break;
             case GET_OBJECT: {
@@ -91,7 +93,9 @@ int main(int argc, char **argv) {
                 }
                 msg.position[3] = Param_RobotArm_GrabAngle_Open;
                 msg.velocity[3] = 10;
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = GET_OBJECTING;
             } break;
             case GRAB: {
@@ -104,13 +108,14 @@ int main(int argc, char **argv) {
                 }
                 msg.position[3] = Param_RobotArm_GrabAngle_Close;
                 msg.velocity[3] = 10;
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = GRABBING;
             } break;
             case PUT_OBJECT: {
                 std_msgs::Bool Stowage_msg;
                 Stowage_msg.data = false;
-                Stowage_pub.publish(Stowage_msg);
 
                 sensor_msgs::JointState msg;
                 for (int i = 0; i < 3; i++) {
@@ -121,7 +126,10 @@ int main(int argc, char **argv) {
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Close);
                 msg.velocity.push_back(5);
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    Stowage_pub.publish(Stowage_msg);
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = PUT_OBJECTING;
             } break;
             case RELEASE: {
@@ -134,7 +142,9 @@ int main(int argc, char **argv) {
                 msg.name.push_back(RobotArm.GetJointName(3));
                 msg.position.push_back(Param_RobotArm_GrabAngle_Open);
                 msg.velocity.push_back(5);
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = RELEASING;
             } break;
             case STOP: {
@@ -149,7 +159,9 @@ int main(int argc, char **argv) {
                 msg.position.push_back(110);
                 msg.position[3] = Param_RobotArm_GrabAngle_Close;
                 msg.velocity[3] = 10;
-                JointState_pub.publish(msg);
+                for (int i = 0; i < 3; i++) {
+                    JointState_pub.publish(msg);
+                }
                 Robot_Arm_State = STOPPING;
             } break;
             default:
